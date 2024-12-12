@@ -1,0 +1,75 @@
+-- Create Database
+CREATE DATABASE IF NOT EXISTS new_scandiweb;
+USE new_scandiweb;
+
+-- Products Table
+CREATE TABLE IF NOT EXISTS products (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    inStock BOOLEAN NOT NULL,
+    price DOUBLE NOT NULL,
+    currency_symbol VARCHAR(10) NOT NULL,
+    description TEXT NOT NULL
+);
+
+-- Sample Data for Products
+INSERT INTO products (id, name, category, inStock, price, currency_symbol, description)
+VALUES
+('prod1', 'Product 1', 'Clothing', 1, 49.99, '$', 'A nice shirt'),
+('prod2', 'Product 2', 'Clothing', 1, 59.99, '$', 'A nice jacket');
+
+-- Photos Table
+CREATE TABLE IF NOT EXISTS photos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id VARCHAR(255) NOT NULL,
+    photo_url TEXT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Sample Data for Photos
+INSERT INTO photos (product_id, photo_url)
+VALUES
+('prod1', 'https://example.com/photo1.jpg'),
+('prod1', 'https://example.com/photo2.jpg'),
+('prod2', 'https://example.com/photo3.jpg'),
+('prod2', 'https://example.com/photo4.jpg');
+
+-- Product Attributes Table
+CREATE TABLE IF NOT EXISTS product_attributes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id VARCHAR(255) NOT NULL,
+    attribute_name VARCHAR(255) NOT NULL,
+    attribute_value VARCHAR(255) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Sample Data for Product Attributes
+INSERT INTO product_attributes (product_id, attribute_name, attribute_value)
+VALUES
+('prod1', 'size', 'M'),
+('prod1', 'color', 'Red'),
+('prod2', 'size', 'L'),
+('prod2', 'color', 'Blue');
+
+-- Cart Table
+CREATE TABLE IF NOT EXISTS cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    attributes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(product_id, attributes(255))
+);
+
+-- Orders Table
+CREATE TABLE IF NOT EXISTS orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(255) NOT NULL,
+    product_id VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Example: Initial Empty Cart (No data needed to populate)
+-- Example: Orders (Will be populated dynamically when `placeOrder` is called)

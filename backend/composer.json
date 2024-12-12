@@ -1,5 +1,8 @@
 {
     "require": {
         "webonyx/graphql-php": "^15.19"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
     }
 }
