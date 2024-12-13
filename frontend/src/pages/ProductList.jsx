@@ -64,11 +64,25 @@ const ProductList = ({ addToCart, selectedCategory }) => {
                 View Details
               </button>
               <button
-                className="add-to-cart-btn"
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </button>
+  className="add-to-cart-btn"
+  onClick={() => {
+    // Find the first size and color attributes
+    const firstSize = product.attributes?.find(attr => attr.name.toLowerCase() === 'size')?.value || '';
+    const firstColor = product.attributes?.find(attr => attr.name.toLowerCase() === 'color')?.value || '';
+
+    // Add the product to the cart with selected attributes
+    addToCart({
+      ...product,
+      selectedAttributes: {
+        size: firstSize,
+        color: firstColor,
+      },
+    });
+  }}
+>
+  Add to Cart
+</button>
+
             </div>
           </div>
         ))

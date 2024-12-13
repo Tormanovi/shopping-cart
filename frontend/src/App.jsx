@@ -22,21 +22,42 @@ const App = () => {
 
   const toggleCart = () => {
     setIsCartVisible(!isCartVisible);
+    const cartOverlayActive = document.body.classList.contains('cart-overlay-active');
+  if (cartOverlayActive) {
+    document.body.classList.remove('cart-overlay-active');
+  } else {
+    document.body.classList.add('cart-overlay-active');
+  }
   };
 
-  const addToCart = (product) => {
-    setCartItems((prevCartItems) => {
-      const existingItem = prevCartItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevCartItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevCartItems, { ...product, quantity: 1 }];
-    });
+
+  const addToCart = (item) => {
+    // Check if the exact item (with same attributes) already exists
+    const existingItemIndex = cartItems.findIndex(
+      (cartItem) =>
+        cartItem.id === item.id &&
+        cartItem.selectedAttributes.size === item.selectedAttributes.size &&
+        cartItem.selectedAttributes.color === item.selectedAttributes.color
+    );
+  
+    if (existingItemIndex >= 0) {
+      // Update quantity if the item exists
+      const updatedCart = [...cartItems];
+      updatedCart[existingItemIndex].quantity += 1;
+      setCartItems(updatedCart);
+    } else {
+      // Add new item with quantity 1
+      setCartItems([
+        ...cartItems,
+        {
+          ...item,
+          quantity: 1,
+        },
+      ]);
+    }
   };
+  
+
 
   const removeFromCart = (productId) => {
     setCartItems((prevCartItems) =>
@@ -56,6 +77,7 @@ const App = () => {
 
   return (
     <Router>
+      <div className="page-overlay"></div>
       <div className="app">
         <Header toggleCart={toggleCart} cartItems={cartItems} />
         {isCartVisible && (

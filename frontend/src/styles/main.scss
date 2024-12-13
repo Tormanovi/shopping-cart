@@ -890,3 +890,231 @@ button:hover {
     width: 100%;
   }
 }
+.cart-overlay {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.cart-attributes {
+  margin-top: 10px;
+}
+
+.attribute-display {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-left: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.attribute-display.selected {
+  border: 2px solid #007bff;
+  background-color: #e7f0ff;
+  font-weight: bold;
+}
+
+button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #0056b3;
+}
+.product-attributes {
+  margin-top: 20px;
+
+  .product-attribute {
+    margin-bottom: 15px;
+
+    strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .color-buttons {
+      display: flex;
+      gap: 10px; /* Add space between buttons */
+    }
+
+    .color-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%; /* Make the button circular */
+      border: 2px solid transparent; /* Default border */
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+
+      &.selected {
+        border-color: #000; /* Highlight the selected color */
+      }
+    }
+  }
+}
+.attribute-button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid rgb(32, 108, 116);
+  background-color: rgb(32, 108, 116); /* Default white background */
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #f0ad4e; /* Orange background on hover */
+    color: #fff; /* White text on hover */
+    border-color: #f0ad4e; /* Orange border on hover */
+  }
+}
+
+.attribute-button.selected {
+  border: 3px solid #007bff; /* Blue border for the selected button */
+  background-color: #007bff; /* Bright blue background */
+  color: #ffffff; /* White text for better contrast */
+}
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-actions button {
+  margin: 0 5px;
+  padding: 5px 10px;
+}
+
+.cart-total {
+  margin-top: 20px;
+}
+
+.place-order-btn {
+  width: 100%;
+  padding: 10px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.place-order-btn:hover {
+  background: #45a049;
+}
+/* Overlay background for dark effect */
+.page-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  z-index: 999; /* Ensures it is above the rest of the page but below the cart overlay */
+  pointer-events: none; /* Allows clicks to pass through the overlay */
+  display: none; /* Hidden by default */
+}
+
+/* Show the overlay when the cart overlay is active */
+.cart-overlay-active .page-overlay {
+  display: block;
+}
+.cart-overlay {
+  width: 400px; // Make the cart wider
+  max-width: 90%;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.cart-item-details {
+  flex-grow: 1;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  position: relative;
+}
+
+.color-box.selected {
+  border: 2px solid green;
+}
+
+.color-box .checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.size-label {
+  padding: 5px 10px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+}
+
+.size-label.selected {
+  background-color: #47ae25;
+  border-bottom: 2px solid green;
+  font-weight: bold;
+}

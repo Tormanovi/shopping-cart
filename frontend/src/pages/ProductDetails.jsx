@@ -7,21 +7,27 @@ const ProductDetails = ({ addToCart }) => {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
+  const [selectedSize, setSelectedSize] = useState(''); // State for selected size
+  const [selectedColor, setSelectedColor] = useState(''); // State for selected color
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        console.log('Fetching product data...');
         const response = await api.get();
-        console.log('API Response:', response.data); // Log the entire response
-
         const productData = response.data.products.find(
           (item) => item.id === id
         );
-        console.log('Fetched product data:', productData); // Log the matched product
-
-        setProduct(productData);
+        setProduct(productData); 
         setSelectedImage(productData?.gallery[0]); // Set the first image as default
+
+// Automatically select the first available size
+const defaultSize = productData?.attributes?.find(attr => attr.name.toLowerCase() === 'size')?.value || '';
+setSelectedSize(defaultSize);
+
+// Automatically select the first available color
+const defaultColor = productData?.attributes?.find(attr => attr.name.toLowerCase() === 'color')?.value || '';
+setSelectedColor(defaultColor);
+     
       } catch (error) {
         console.error('Error fetching product details:', error);
       }
@@ -31,13 +37,20 @@ const ProductDetails = ({ addToCart }) => {
   }, [id]);
 
   if (!product) {
-    console.log('Product not found or still loading...');
     return <p>Loading product details...</p>;
   }
 
-  // Debugging price handling
-  console.log('Product Details:', product); // Log the entire product object
-  console.log('Product Price:', product.price); // Log the price specifically
+  // Function to handle adding to cart
+  const handleAddToCart = () => {
+    addToCart({
+      ...product,
+      selectedAttributes: {
+        size: selectedSize,
+        color: selectedColor,
+      },
+    });
+    navigate('/'); // Navigate back to the main page
+  };
 
   return (
     <div className="product-details">
@@ -58,30 +71,78 @@ const ProductDetails = ({ addToCart }) => {
         </div>
       </div>
       <div className="product-info">
-  <h1>{product.name || 'No name available'}</h1>
+        <h1>{product.name || 'No name available'}</h1>
+        <p>
+          <strong>Price:</strong>{' '}
+          {product.price ? `$${Number(product.price).toFixed(2)}` : 'Price not available'}
+        </p>
 
-  {/* Simplified Price Rendering */}
-  <p>
-    <strong>Price:</strong>{' '}
-    {product.price ? `$${Number(product.price).toFixed(2)}` : 'Price not available'}
-  </p>
+        {product.attributes && product.attributes.length > 0 && (
+  <div className="product-attributes">
+    {/* Size Buttons */}
+    {product.attributes
+      .filter((attr) => attr.name.toLowerCase() === 'size')
+      .length > 0 && (
+      <div className="size-selector">
+        <strong>Select Size:</strong>
+        <div>
+          {product.attributes
+            .filter((attr) => attr.name.toLowerCase() === 'size')
+            .map((attr, index) => (
+              <button
+                key={index}
+                className={`attribute-button ${
+                  selectedSize === attr.value ? 'selected' : ''
+                }`}
+                onClick={() => setSelectedSize(attr.value)}
+              >
+                {attr.value}
+              </button>
+            ))}
+        </div>
+      </div>
+    )}
 
-  {/* Add to Cart Button */}
-  <button
-    onClick={() => {
-      console.log('Adding product to cart:', product); // Debug the product being added
-      addToCart(product);
-      navigate('/'); // Navigate back to the main page
-    }}
-  >
-    Add to Cart
-  </button>
+    {/* Color Buttons */}
+    {product.attributes
+      .filter((attr) => attr.name.toLowerCase() === 'color')
+      .length > 0 && (
+      <div className="color-selector">
+        <strong>Select Color:</strong>
+        <div>
+        {product.attributes
+  .filter((attr) => attr.name.toLowerCase() === 'color')
+  .map((attr, index) => (
+    <button
+      key={index}
+      className={`attribute-button ${
+        selectedColor === attr.value ? 'selected' : ''
+      }`}
+      onClick={() => setSelectedColor(attr.value)}
+      style={{
+        backgroundColor: attr.value,
+        border: selectedColor === attr.value ? '2px solid black' : '1px solid #ccc', // Highlight selected color
+      }}
+    >
+      {/* No text inside the button */}
+    </button>
+  ))}
 
-  <div
-    className="product-description"
-    dangerouslySetInnerHTML={{ __html: product.description || 'No description available' }}
-  />
-</div>
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
+
+        {/* Add to Cart Button */}
+        <button onClick={handleAddToCart}>Add to Cart</button>
+
+        <div
+          className="product-description"
+          dangerouslySetInnerHTML={{ __html: product.description || 'No description available' }}
+        />
+      </div>
     </div>
   );
 };
