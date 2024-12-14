@@ -1,0 +1,4 @@
+Query: mutation { placeOrder(productIds: ["prod1", "prod2"], total: 100.0, currency: "$") { id productIds total currency status } }
+Response: {"data":{"placeOrder":{"id":"675c9c299746d","productIds":["prod1","prod2"],"total":100,"currency":"$","status":"Pending"}}}
+Query: mutation { placeOrder(productIds: ["prod1", "prod2"], total: 100.0, currency: "$") { id productIds total currency status } }
+Response: {"data":{"placeOrder":{"id":"675ca52c2092a","productIds":["prod1","prod2"],"total":100,"currency":"$","status":"Pending"}}}

@@ -152,15 +152,11 @@ const CartOverlay = ({ cartItems, toggleCart, removeFromCart, addToCart, placeOr
 
       {cartItems.length > 0 && (
         <button
-        className="place-order-btn"
-        onClick={() => {
-          placeOrder();
-          setTotal(0); // Reset total after placing the order
-          setTotalItems(0); // Reset total items after placing the order
-        }}
-      >
-        Place Order
-      </button>
+          className="place-order-btn"
+          onClick={handlePlaceOrder}
+        >
+          Place Order
+        </button>
       )}
     </div>
   );
