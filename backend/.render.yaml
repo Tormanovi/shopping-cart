@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: shopping-cart-backend
+    env: php
+    plan: free
+    buildCommand: "" # Leave empty since PHP doesn't need a build step
+    startCommand: php -S 0.0.0.0:8080
