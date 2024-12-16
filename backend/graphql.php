@@ -7,7 +7,8 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
 
 // Database connection
-$conn = new mysqli("127.0.0.1", "root", "yourpassword", "new_scandiweb");
+// $conn = new mysqli("127.0.0.1", "root", "yourpassword", "new_scandiweb");
+$conn = new mysqli("sql7.freesqldatabase.com", "sql7752412", "Jc8bE4w1z9", "sql7752412");
 
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
