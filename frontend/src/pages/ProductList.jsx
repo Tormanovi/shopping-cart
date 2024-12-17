@@ -87,7 +87,7 @@ const ProductList = ({ addToCart, selectedCategory }) => {
           </div>
         ))
       ) : (
-        <p>No products available</p>
+        <p>Products Loading...</p>
       )}
     </div>
   );

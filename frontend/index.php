@@ -3,12 +3,43 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-$apiUrl = 'http://localhost:8001/api.php';
+// $apiUrl = 'http://tormanovi.infinityfreeapp.com/api.php'; // Remote API
+$localApiUrl = 'http://localhost:8001/api.php'; // Local API
+
+// Function to fetch data from an API
+function fetchData($url) {
+    // Use file_get_contents for local URLs
+    if (strpos($url, 'localhost') !== false) {
+        $data = @file_get_contents($url);
+        if ($data === false) {
+            return ["error" => "Unable to fetch data from $url"];
+        }
+        return $data;
+    }
+
+    // Use cURL for remote URLs
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+    $data = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        return ["error" => curl_error($ch)];
+    }
+
+    curl_close($ch);
+    return $data;
+}
+
+// Decide which API URL to use
+$apiUrlToUse = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) ? $localApiUrl : $apiUrl;
 
 // Handle POST requests (e.g., for placing orders)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
-    $ch = curl_init('http://localhost:8001/graphql.php'); // Send to backend
+    $ch = curl_init($apiUrlToUse);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($input));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -21,17 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Handle GET requests (e.g., fetch products)
-$data = @file_get_contents($apiUrl);
-if ($data === false) {
-    die("Error: Unable to fetch data from API at $apiUrl.");
-}
+// Fetch data from the API
+$data = fetchData($apiUrlToUse);
 
+// Check if the response is valid JSON
 $products = json_decode($data, true);
 if (!is_array($products)) {
-    die("Error: Invalid API response.");
+    die("Error: Invalid API response. Check the API at $apiUrlToUse.");
 }
 
+// For API clients, return JSON
 if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
     echo json_encode(["products" => $products]);
     exit;
@@ -106,19 +136,5 @@ if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'applicati
             <?php endforeach; ?>
         </tbody>
     </table>
-
-    <h2>Test Order Placement</h2>
-    <form method="POST">
-        <label for="productIds">Product IDs (comma-separated):</label><br>
-        <input type="text" id="productIds" name="productIds" required><br><br>
-        
-        <label for="total">Total Amount:</label><br>
-        <input type="number" step="0.01" id="total" name="total" required><br><br>
-        
-        <label for="currency">Currency:</label><br>
-        <input type="text" id="currency" name="currency" value="$" required><br><br>
-        
-        <button type="submit">Place Order</button>
-    </form>
 </body>
 </html>
