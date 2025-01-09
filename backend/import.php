@@ -1,14 +1,13 @@
 <?php
 // Database connection
-// $conn = new mysqli("127.0.0.1", "root", "yourpassword", "new_scandiweb");
-$conn = new mysqli("sql7.freesqldatabase.com", "sql7752412", "Jc8bE4w1z9", "sql7752412");
+$conn = new mysqli("fdb1029.awardspace.net", "4572775_scandiweb", "Martinelli11", "4572775_scandiweb");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 // Load JSON data
-$jsonData = file_get_contents("data.json");
+$jsonData = file_get_contents("http://tormanovi.com/scandiweb/backend/data.json");
 $data = json_decode($jsonData, true);
 
 // Insert products and their attributes
@@ -24,15 +23,17 @@ foreach ($data['data']['products'] as $product) {
         $stmt = $conn->prepare("INSERT INTO products (id, name, category, in_stock, price, currency_symbol, description) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $price = $product['prices'][0]['amount'];
         $currency = $product['prices'][0]['currency']['symbol'];
+        $in_stock = $product['inStock'] ? 1 : 0; // Convert to boolean (1 or 0)
+        $description = strip_tags($product['description']); // Strip HTML tags for database storage
         $stmt->bind_param(
-            "sssdsds",
+            "sssidss",
             $product['id'],
             $product['name'],
             $product['category'],
-            $product['inStock'],
+            $in_stock,
             $price,
             $currency,
-            $product['description']
+            $description
         );
         $stmt->execute();
         $stmt->close();

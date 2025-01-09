@@ -17,12 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database connection
+/*
 $host = "sql7.freesqldatabase.com";
 $username = "sql7752412";
 $password = "Jc8bE4w1z9";
 $database = "sql7752412";
 
 $conn = new mysqli($host, $username, $password, $database);
+
+*/
+
+// $conn = new mysqli("127.0.0.1", "root", "yourpassword", "new_scandiweb");
+$conn = new mysqli("fdb1029.awardspace.net", "4572775_scandiweb", "Martinelli11", "4572775_scandiweb");
 
 // Check connection
 if ($conn->connect_error) {

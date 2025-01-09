@@ -14,20 +14,19 @@ const ProductDetails = ({ addToCart }) => {
     const fetchProduct = async () => {
       try {
         const response = await api.get();
-        const productData = response.data.products.find(
-          (item) => item.id === id
-        );
-        setProduct(productData); 
+        const productData = response.data.find((item) => item.id === id);
+        setProduct(productData);
         setSelectedImage(productData?.gallery[0]); // Set the first image as default
 
-// Automatically select the first available size
-const defaultSize = productData?.attributes?.find(attr => attr.name.toLowerCase() === 'size')?.value || '';
-setSelectedSize(defaultSize);
+        // Automatically select the first available size
+        const defaultSize =
+          productData?.attributes?.find((attr) => attr.name.toLowerCase() === 'size')?.value || '';
+        setSelectedSize(defaultSize);
 
-// Automatically select the first available color
-const defaultColor = productData?.attributes?.find(attr => attr.name.toLowerCase() === 'color')?.value || '';
-setSelectedColor(defaultColor);
-     
+        // Automatically select the first available color
+        const defaultColor =
+          productData?.attributes?.find((attr) => attr.name.toLowerCase() === 'color')?.value || '';
+        setSelectedColor(defaultColor);
       } catch (error) {
         console.error('Error fetching product details:', error);
       }
@@ -77,70 +76,71 @@ setSelectedColor(defaultColor);
           {product.price ? `$${Number(product.price).toFixed(2)}` : 'Price not available'}
         </p>
 
+        {/* Product Attributes */}
         {product.attributes && product.attributes.length > 0 && (
-  <div className="product-attributes">
-    {/* Size Buttons */}
-    {product.attributes
-      .filter((attr) => attr.name.toLowerCase() === 'size')
-      .length > 0 && (
-      <div className="size-selector">
-        <strong>Select Size:</strong>
-        <div>
-          {product.attributes
-            .filter((attr) => attr.name.toLowerCase() === 'size')
-            .map((attr, index) => (
-              <button
-                key={index}
-                className={`attribute-button ${
-                  selectedSize === attr.value ? 'selected' : ''
-                }`}
-                onClick={() => setSelectedSize(attr.value)}
-              >
-                {attr.value}
-              </button>
-            ))}
-        </div>
-      </div>
-    )}
+          <div className="product-attributes">
+            {/* Size Buttons */}
+            {product.attributes
+              .filter((attr) => attr.name.toLowerCase() === 'size')
+              .length > 0 && (
+              <div className="size-selector">
+                <strong>Select Size:</strong>
+                <div>
+                  {product.attributes
+                    .filter((attr) => attr.name.toLowerCase() === 'size')
+                    .map((attr, index) => (
+                      <button
+                        key={index}
+                        className={`attribute-button ${
+                          selectedSize === attr.value ? 'selected' : ''
+                        }`}
+                        onClick={() => setSelectedSize(attr.value)}
+                      >
+                        {attr.value}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
 
-    {/* Color Buttons */}
-    {product.attributes
-      .filter((attr) => attr.name.toLowerCase() === 'color')
-      .length > 0 && (
-      <div className="color-selector">
-        <strong>Select Color:</strong>
-        <div>
-        {product.attributes
-  .filter((attr) => attr.name.toLowerCase() === 'color')
-  .map((attr, index) => (
-    <button
-      key={index}
-      className={`attribute-button ${
-        selectedColor === attr.value ? 'selected' : ''
-      }`}
-      onClick={() => setSelectedColor(attr.value)}
-      style={{
-        backgroundColor: attr.value,
-        border: selectedColor === attr.value ? '2px solid black' : '1px solid #ccc', // Highlight selected color
-      }}
-    >
-      {/* No text inside the button */}
-    </button>
-  ))}
-
-        </div>
-      </div>
-    )}
-  </div>
-)}
-
+            {/* Color Buttons */}
+            {product.attributes
+              .filter((attr) => attr.name.toLowerCase() === 'color')
+              .length > 0 && (
+              <div className="color-selector">
+                <strong>Select Color:</strong>
+                <div>
+                  {product.attributes
+                    .filter((attr) => attr.name.toLowerCase() === 'color')
+                    .map((attr, index) => (
+                      <button
+                        key={index}
+                        className={`attribute-button ${
+                          selectedColor === attr.value ? 'selected' : ''
+                        }`}
+                        onClick={() => setSelectedColor(attr.value)}
+                        style={{
+                          backgroundColor: attr.value,
+                          border:
+                            selectedColor === attr.value ? '2px solid black' : '1px solid #ccc',
+                        }}
+                      />
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Add to Cart Button */}
         <button onClick={handleAddToCart}>Add to Cart</button>
 
+        {/* Product Description */}
         <div
           className="product-description"
-          dangerouslySetInnerHTML={{ __html: product.description || 'No description available' }}
+          dangerouslySetInnerHTML={{
+            __html: product.description || 'No description available',
+          }}
         />
       </div>
     </div>

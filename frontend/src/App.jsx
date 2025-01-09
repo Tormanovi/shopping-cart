@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import ProductList from './pages/ProductList';
 import CartOverlay from './components/CartOverlay';
@@ -23,30 +23,26 @@ const App = () => {
   const toggleCart = () => {
     setIsCartVisible(!isCartVisible);
     const cartOverlayActive = document.body.classList.contains('cart-overlay-active');
-  if (cartOverlayActive) {
-    document.body.classList.remove('cart-overlay-active');
-  } else {
-    document.body.classList.add('cart-overlay-active');
-  }
+    if (cartOverlayActive) {
+      document.body.classList.remove('cart-overlay-active');
+    } else {
+      document.body.classList.add('cart-overlay-active');
+    }
   };
 
-
   const addToCart = (item) => {
-    // Check if the exact item (with same attributes) already exists
     const existingItemIndex = cartItems.findIndex(
       (cartItem) =>
         cartItem.id === item.id &&
         cartItem.selectedAttributes.size === item.selectedAttributes.size &&
         cartItem.selectedAttributes.color === item.selectedAttributes.color
     );
-  
+
     if (existingItemIndex >= 0) {
-      // Update quantity if the item exists
       const updatedCart = [...cartItems];
       updatedCart[existingItemIndex].quantity += 1;
       setCartItems(updatedCart);
     } else {
-      // Add new item with quantity 1
       setCartItems([
         ...cartItems,
         {
@@ -56,8 +52,6 @@ const App = () => {
       ]);
     }
   };
-  
-
 
   const removeFromCart = (productId) => {
     setCartItems((prevCartItems) =>
@@ -71,12 +65,12 @@ const App = () => {
 
   const placeOrder = () => {
     alert('Order has been placed successfully!');
-    setCartItems([]); // Clear the cart
-    toggleCart(); // Close the cart overlay
+    setCartItems([]);
+    toggleCart();
   };
 
   return (
-    <Router>
+    <Router basename="/scandiweb/frontend">
       <div className="page-overlay"></div>
       <div className="app">
         <Header toggleCart={toggleCart} cartItems={cartItems} />
@@ -91,22 +85,12 @@ const App = () => {
         )}
         <div className={`main-content ${isCartVisible ? 'dimmed' : ''}`}>
           <Routes>
-            <Route
-              path="/"
-              element={<ProductList addToCart={addToCart} selectedCategory="all" />}
-            />
-            <Route
-              path="/clothes"
-              element={<ProductList addToCart={addToCart} selectedCategory="clothes" />}
-            />
-            <Route
-              path="/tech"
-              element={<ProductList addToCart={addToCart} selectedCategory="tech" />}
-            />
-            <Route
-              path="/product/:id"
-              element={<ProductDetails addToCart={addToCart} />}
-            />
+            <Route path="/" element={<Navigate to="/all" replace />} />
+            <Route path="/all" element={<ProductList addToCart={addToCart} selectedCategory="all" />} />
+            <Route path="/clothes" element={<ProductList addToCart={addToCart} selectedCategory="clothes" />} />
+            <Route path="/tech" element={<ProductList addToCart={addToCart} selectedCategory="tech" />} />
+            <Route path="/product/:id" element={<ProductDetails addToCart={addToCart} />} />
+            <Route path="*" element={<Navigate to="/all" replace />} />
           </Routes>
         </div>
       </div>

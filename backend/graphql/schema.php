@@ -29,7 +29,8 @@ $productType = new ObjectType([
         'attributes' => [
             'type' => Type::listOf($attributeType),
             'resolve' => function ($product) {
-                $conn = new mysqli("127.0.0.1", "root", "yourpassword", "new_scandiweb");
+                // $conn = new mysqli("127.0.0.1", "root", "yourpassword", "new_scandiweb");
+                $conn = new mysqli("fdb1029.awardspace.net", "4572775_scandiweb", "Martinelli11", "4572775_scandiweb");
 
                 if ($conn->connect_error) {
                     throw new \Exception("Database connection failed: " . $conn->connect_error);
